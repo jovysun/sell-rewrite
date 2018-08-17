@@ -1,6 +1,6 @@
 <template>
   <div class="shop">
-    <shop-header></shop-header>
+    <shop-header :seller="seller"></shop-header>
     <div class="tab border-1px">
       <div class="tab-item">
         <router-link to="/shop/goods">商品</router-link>
@@ -22,6 +22,22 @@ import shopHeader from '@/components/header/header.vue'
 
 export default {
   name: 'shop',
+  data() {
+    return {
+      seller: {}
+    }
+  },
+  created() {
+    this.$axios.get('/api/seller')
+    .then((response) => {
+      if(response.data.errno === 0){
+        this.seller = response.data.seller;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  },
   components: {
     shopHeader
   }
