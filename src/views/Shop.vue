@@ -49,6 +49,7 @@ export default {
 .shop{
   .tab{
     display: flex;
+    text-align: center;
     &.border-1px{
       @include border-1px(rgba(7, 17, 27, 0.1));
     }
