@@ -13,11 +13,29 @@
       </div>
       <div class="bar-right">￥20元起送</div>
     </div>
-    <div class="list"></div>
+    <div class="list">
+      <div class="header border-1px">
+        购物车<span class="btn">清空</span>
+      </div>
+      <div class="content">
+        <ul>
+          <li class="item">
+            <span class="name">黑米粥</span>
+            <div class="price">￥8</div>
+            <div class="cartcontrol-wrapper">
+              <cartcontrol></cartcontrol>
+            </div>
+            
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+  // import BScroll from 'better-scroll';
+  import cartcontrol from '@/components/cartcontrol/cartcontrol.vue';
   export default {
     props: {
       seller: {
@@ -28,19 +46,26 @@
       return {
         num: 99
       }
+    },
+    components: {
+      cartcontrol
     }
 
   }
 </script>
 
 <style scoped lang="scss">
+  @import '@/common/scss/mixin.scss';
   .shopcart{
     position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
     height: 48px;
+    z-index: 200;
     .bar{
+      position: relative;
+      z-index: 2;
       display: flex;
       height: 48px;
       .bar-right{
@@ -125,6 +150,50 @@
           color: rgba(255, 255, 255, 0.4);
           font-weight: 700;
           line-height: 24px;
+        }
+      }
+    }
+    .list{
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      background: #fff;
+      transform: translate3d(0, -100%, 0);
+      .header{
+        padding: 0 18px;
+        line-height: 40px;
+        background: #f3f5f7;
+        font-size: 14px;
+        color: rgb(7, 17, 27);
+        &.border-1px{
+          @include border-1px(rgba(7,17,27,0.1));
+        }
+        .btn{
+          float: right;
+          font-size: 12px;
+          color: rgb(0, 160, 220);
+        }
+      }
+      .content{
+        .item{
+          position: relative;
+          padding: 12px 18px;
+          .name{
+            display: inline-block;
+            font-size: 14px;
+            color: rgb(7, 17, 27);
+            line-height: 24px;
+          }
+          .price{
+            position: absolute;
+            right: 90px;
+            top: 0;
+          }
+          .cartcontrol-wrapper{
+
+          }
         }
       }
     }
