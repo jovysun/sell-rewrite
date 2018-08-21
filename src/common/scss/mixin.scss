@@ -12,14 +12,12 @@
 
 }
 
-
 @mixin border-none(){
   &:after{
     display: none;
   }
     
 }
-
 
 @mixin bg-image($url){
   background-image: url($url + "@2x.png");
@@ -28,4 +26,17 @@
   }
     
 }
-     
+
+@mixin star-bg-image($size){
+  &.star-#{$size}{       
+    &.on{
+      @include bg-image('star#{$size}_on');
+    }
+    &.half{
+      @include bg-image('star#{$size}_half');
+    }
+    &.off{
+      @include bg-image('star#{$size}_off');
+    }     
+  }
+}
