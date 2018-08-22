@@ -29,13 +29,12 @@
     font-size: 0;
     .icon-add_circle,.icon-remove_circle_outline{
       display: inline-block;
-      vertical-align: text-top;
       font-size: 24px;
       color: rgb(0, 160, 220);
     }
     .num{
       display: inline-block;
-      vertical-align: text-top;
+      vertical-align: top;
       width: 24px;
       text-align: center;
       font-size: 10px;

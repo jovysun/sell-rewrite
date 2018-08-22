@@ -1,41 +1,106 @@
 <template>
-  <div class="shopcart">
-    <div class="bar">
-      <div class="bar-left">
-        <div class="circle">
-          <div class="circle-inner" :class="{'not-empty': num != 0}">
-            <i class="icon-shopping_cart"></i>
-            <span class="num" v-show="num">{{num}}</span>
-          </div>
-        </div>
-        <div class="total-price">￥0</div>
-        <div class="delivery-price">另需配送费￥4元</div>
-      </div>
-      <div class="bar-right">￥20元起送</div>
-    </div>
-    <div class="list">
-      <div class="header border-1px">
-        购物车<span class="btn">清空</span>
-      </div>
-      <div class="content">
-        <ul>
-          <li class="item">
-            <span class="name">黑米粥</span>
-            <div class="price">￥8</div>
-            <div class="cartcontrol-wrapper">
-              <cartcontrol></cartcontrol>
+  <div>
+    <div class="shopcart">
+      <div class="bar">
+        <div class="bar-left">
+          <div class="circle">
+            <div class="circle-inner" :class="{'not-empty': num != 0}">
+              <i class="icon-shopping_cart"></i>
+              <span class="num" v-show="num">{{num}}</span>
             </div>
-            
-          </li>
-        </ul>
+          </div>
+          <div class="total-price">￥0</div>
+          <div class="delivery-price">另需配送费￥4元</div>
+        </div>
+        <div class="bar-right">￥20元起送</div>
+      </div>
+      <div class="list">
+        <div class="header border-1px">
+          购物车<span class="btn">清空</span>
+        </div>
+        <div class="content" ref="listContent">
+          <ul>
+            <li class="item border-1px">
+              <span class="name">黑米粥</span>
+              <div class="price">￥8</div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>             
+            </li>
+            <li class="item">
+              <span class="name">好吃的黑米粥</span>
+              <div class="price">￥18</div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>           
+            </li>
+            <li class="item border-1px">
+              <span class="name">黑米粥</span>
+              <div class="price">￥8</div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>             
+            </li>
+            <li class="item">
+              <span class="name">好吃的黑米粥</span>
+              <div class="price">￥18</div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>           
+            </li>
+            <li class="item border-1px">
+              <span class="name">黑米粥</span>
+              <div class="price">￥8</div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>             
+            </li>
+            <li class="item">
+              <span class="name">好吃的黑米粥</span>
+              <div class="price">￥18</div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>           
+            </li>
+            <li class="item border-1px">
+              <span class="name">黑米粥</span>
+              <div class="price">￥8</div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>             
+            </li>
+            <li class="item">
+              <span class="name">好吃的黑米粥</span>
+              <div class="price">￥18</div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>           
+            </li>
+            <li class="item border-1px">
+              <span class="name">黑米粥</span>
+              <div class="price">￥8</div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>             
+            </li>
+            <li class="item">
+              <span class="name">好吃的黑米粥</span>
+              <div class="price">￥18</div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>           
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
+    <div class="shopcart-mask"></div>
   </div>
 </template>
 
 <script>
-  // import BScroll from 'better-scroll';
   import cartcontrol from '@/components/cartcontrol/cartcontrol.vue';
+  import BScroll from 'better-scroll';
   export default {
     props: {
       seller: {
@@ -45,6 +110,19 @@
     data() {
       return {
         num: 99
+      }
+    },
+    created() {
+      this.$nextTick(() => {
+        this._initScroll();
+      })
+      
+    },
+    methods: {
+      _initScroll() {
+        this.contentScroll = new BScroll(this.$refs.listContent, {
+          click: true
+        })
       }
     },
     components: {
@@ -62,7 +140,7 @@
     bottom: 0;
     width: 100%;
     height: 48px;
-    z-index: 200;
+    z-index: 201;
     .bar{
       position: relative;
       z-index: 2;
@@ -177,9 +255,14 @@
         }
       }
       .content{
+        max-height: 217px;
+        overflow: hidden;
         .item{
           position: relative;
           padding: 12px 18px;
+          &.border-1px{
+            @include border-1px(rgba(7,17,27,0.1));
+          }
           .name{
             display: inline-block;
             font-size: 14px;
@@ -189,14 +272,29 @@
           .price{
             position: absolute;
             right: 90px;
-            top: 0;
+            top: 12px;
+            padding: 0 12px 0 18px;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(240, 20, 20);
           }
           .cartcontrol-wrapper{
-
+            position: absolute;
+            right: 18px;
+            top: 12px;
+            height: 24px;
           }
         }
       }
     }
   }
-
+  .shopcart-mask{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+    background: rgba(7, 17, 27, 0.6);
+  }
 </style>
