@@ -16,21 +16,21 @@
           <li class="content-item" v-for="(cate,index) in goods" :key="index" ref="contentItem">
             <h3 class="name">{{cate.name}}</h3>
             <dl class="food-list">
-              <dd class="food-item border-1px" v-for="(item,index) in cate.foods" :key="index">
-                <div class="food-pic"><img :src="item.icon" alt="" width="57" height="57"></div>
+              <dd class="food-item border-1px" v-for="(food,index) in cate.foods" :key="index">
+                <div class="food-pic"><img :src="food.icon" alt="" width="57" height="57"></div>
                 <div class="food-content">
-                  <h3 class="food-name">{{item.name}}</h3>
-                  <div class="desc" v-if="item.description">{{item.description}}</div>
+                  <h3 class="food-name">{{food.name}}</h3>
+                  <div class="desc" v-if="food.description">{{food.description}}</div>
                   <div class="sell-rating">
-                    <span class="count">月售{{item.sellCount}}份</span>
-                    <span class="rating">好评率{{item.rating}}%</span>
+                    <span class="count">月售{{food.sellCount}}份</span>
+                    <span class="rating">好评率{{food.rating}}%</span>
                   </div>
                   <div class="price">
-                    <span class="now">￥{{item.price}}</span>
-                    <span class="old" v-show="item.oldPrice">￥{{item.oldPrice}}</span>
+                    <span class="now">￥{{food.price}}</span>
+                    <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="carcontrol-wrapper">
-                    <cartcontrol></cartcontrol>
+                    <cartcontrol :food="food" @add="addFood"></cartcontrol>
                   </div>
                 </div>
 
@@ -39,7 +39,7 @@
           </li>
         </ul>
       </div>
-      <shopcart></shopcart>
+      <shopcart :seller="seller" :selectFoods="selectFoods"></shopcart>
     </div>
     
   </div>
@@ -50,6 +50,11 @@
   import cartcontrol from '@/components/cartcontrol/cartcontrol.vue';
   import shopcart from '@/components/shopcart/shopcart.vue';
   export default {
+    props: {
+      seller: {
+        type: Object
+      }
+    },
     data() {
       return {
         classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
@@ -69,6 +74,18 @@
           }          
         }
         return 0;
+      },
+      selectFoods() {
+        let foods = [];
+        this.goods.forEach((element) => {
+          element.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food);
+            }
+          })
+        })
+
+        return foods;
       }
     },
     created() {
@@ -111,6 +128,9 @@
       },
       selectMenu(index) {
         this.contentScroll.scrollToElement(this.$refs.contentItem[index], 300);
+      },
+      addFood() {
+        console.log('add food');
       }
     },
     components: {

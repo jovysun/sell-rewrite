@@ -225,7 +225,7 @@
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    z-index: 100;
+    z-index: 200;
     padding: 64px 36px 32px 36px;
     background: rgba(7, 17, 27, 0.8);
     .name{

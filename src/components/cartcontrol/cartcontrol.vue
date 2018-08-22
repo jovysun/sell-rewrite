@@ -1,24 +1,33 @@
 <template>
   <div class="cartcontrol">
-    <i class="icon-remove_circle_outline" v-show="num" @click="remove"></i>
-    <span class="num" v-show="num">{{num}}</span>
-    <i class="icon-add_circle" @click="add"></i>
+    <i class="icon-remove_circle_outline" v-show="food.count > 0" @click="decreaseCart"></i>
+    <span class="num" v-show="food.count > 0">{{food.count}}</span>
+    <i class="icon-add_circle" @click="addCart"></i>
   </div>
 </template>
 
 <script>
+  import Vue from 'vue';
   export default {
-    data() {
-      return {
-        num: 0
+    props: {
+      food: {
+        type: Object
       }
     },
     methods: {
-      add() {
-        this.num++;
+      addCart() {
+        if(!this.food.count) {
+          Vue.set(this.food, 'count', 1);
+        }else {
+          this.food.count++;
+        }
+        this.$emit('add', event.target);
       },
-      remove() {
+      decreaseCart() {
         this.num > 0 ? this.num-- : '';
+        if(this.food.count) {
+          this.food.count--;
+        }
       }
     }
   }

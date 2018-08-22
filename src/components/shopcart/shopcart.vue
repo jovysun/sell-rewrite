@@ -1,100 +1,37 @@
 <template>
   <div>
     <div class="shopcart">
-      <div class="bar">
+      <div class="bar" @click="toggleList">
         <div class="bar-left">
           <div class="circle">
-            <div class="circle-inner" :class="{'not-empty': num != 0}">
+            <div class="circle-inner" :class="{'not-empty': totalCount != 0}">
               <i class="icon-shopping_cart"></i>
-              <span class="num" v-show="num">{{num}}</span>
+              <span class="num" v-show="totalCount">{{totalCount}}</span>
             </div>
           </div>
-          <div class="total-price">￥0</div>
-          <div class="delivery-price">另需配送费￥4元</div>
+          <div class="total-price">￥{{totalPrice}}</div>
+          <div class="delivery-price">另需配送费￥{{seller.deliveryPrice}}元</div>
         </div>
-        <div class="bar-right">￥20元起送</div>
+        <div class="bar-right" :class="{'enough': this.totalPrice >= this.seller.minPrice}" @click="pay">{{payTxt}}</div>
       </div>
-      <div class="list">
+      <div class="list" v-show="listShow">
         <div class="header border-1px">
-          购物车<span class="btn">清空</span>
+          购物车<span class="btn" @click="clearShopcart">清空</span>
         </div>
         <div class="content" ref="listContent">
           <ul>
-            <li class="item border-1px">
-              <span class="name">黑米粥</span>
-              <div class="price">￥8</div>
+            <li class="item border-1px" v-for="(food, index) in selectFoods" :key="index">
+              <span class="name">{{food.name}}</span>
+              <div class="price">￥{{food.price}}</div>
               <div class="cartcontrol-wrapper">
-                <cartcontrol></cartcontrol>
+                <cartcontrol :food="food"></cartcontrol>
               </div>             
-            </li>
-            <li class="item">
-              <span class="name">好吃的黑米粥</span>
-              <div class="price">￥18</div>
-              <div class="cartcontrol-wrapper">
-                <cartcontrol></cartcontrol>
-              </div>           
-            </li>
-            <li class="item border-1px">
-              <span class="name">黑米粥</span>
-              <div class="price">￥8</div>
-              <div class="cartcontrol-wrapper">
-                <cartcontrol></cartcontrol>
-              </div>             
-            </li>
-            <li class="item">
-              <span class="name">好吃的黑米粥</span>
-              <div class="price">￥18</div>
-              <div class="cartcontrol-wrapper">
-                <cartcontrol></cartcontrol>
-              </div>           
-            </li>
-            <li class="item border-1px">
-              <span class="name">黑米粥</span>
-              <div class="price">￥8</div>
-              <div class="cartcontrol-wrapper">
-                <cartcontrol></cartcontrol>
-              </div>             
-            </li>
-            <li class="item">
-              <span class="name">好吃的黑米粥</span>
-              <div class="price">￥18</div>
-              <div class="cartcontrol-wrapper">
-                <cartcontrol></cartcontrol>
-              </div>           
-            </li>
-            <li class="item border-1px">
-              <span class="name">黑米粥</span>
-              <div class="price">￥8</div>
-              <div class="cartcontrol-wrapper">
-                <cartcontrol></cartcontrol>
-              </div>             
-            </li>
-            <li class="item">
-              <span class="name">好吃的黑米粥</span>
-              <div class="price">￥18</div>
-              <div class="cartcontrol-wrapper">
-                <cartcontrol></cartcontrol>
-              </div>           
-            </li>
-            <li class="item border-1px">
-              <span class="name">黑米粥</span>
-              <div class="price">￥8</div>
-              <div class="cartcontrol-wrapper">
-                <cartcontrol></cartcontrol>
-              </div>             
-            </li>
-            <li class="item">
-              <span class="name">好吃的黑米粥</span>
-              <div class="price">￥18</div>
-              <div class="cartcontrol-wrapper">
-                <cartcontrol></cartcontrol>
-              </div>           
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="shopcart-mask"></div>
+    <div class="shopcart-mask" v-show="listShow" @click="hideList"></div>
   </div>
 </template>
 
@@ -105,11 +42,63 @@
     props: {
       seller: {
         type: Object
+      },
+      selectedFood: {
+        type: Array
+      },
+      selectFoods: {
+        type: Array
       }
     },
     data() {
       return {
-        num: 99
+        num: 99,
+        fold: true
+      }
+    },
+    computed: {
+      listShow() {
+        let show = !this.fold;
+        if (!this.totalCount) {
+          show = false;
+        }
+        if (show) {
+          this.$nextTick(() => {
+            if (!this.contentScroll) {
+              this._initScroll();
+            } else {
+              this.contentScroll.refresh();
+            }
+            
+          })          
+        }
+
+        return show;
+      },
+      totalCount() {
+        let count = 0;
+        this.selectFoods.forEach(element => {
+          count += element.count;
+        });
+        return count;
+      },
+      totalPrice() {
+        let totalPrice = 0;
+        this.selectFoods.forEach(element => {
+          totalPrice += element.price * element.count;
+        });
+        return totalPrice;
+      },
+      payTxt() {
+        let txt = '';
+        if (this.totalPrice > 0 && this.totalPrice < this.seller.minPrice) {
+          txt = `还差￥${this.seller.minPrice - this.totalPrice}元起送`;
+        } else if (this.totalPrice >= this.seller.minPrice) {
+          txt = '去结算';
+        } else {
+          txt = `￥${this.seller.minPrice}元起送`;
+        }
+        return txt;
       }
     },
     created() {
@@ -123,6 +112,23 @@
         this.contentScroll = new BScroll(this.$refs.listContent, {
           click: true
         })
+      },
+      toggleList() {
+        if(!this.totalCount) return;
+        this.fold = !this.fold;
+      },
+      hideList() {
+        this.fold = true;
+      },
+      clearShopcart() {
+        this.selectFoods.forEach(element => {
+          element.count = 0;
+        })
+      },
+      pay() {
+        if (this.totalPrice >= this.seller.minPrice) {
+          alert(`支付${this.totalPrice}`);
+        }      
       }
     },
     components: {
@@ -140,7 +146,7 @@
     bottom: 0;
     width: 100%;
     height: 48px;
-    z-index: 201;
+    z-index: 101;
     .bar{
       position: relative;
       z-index: 2;
@@ -156,6 +162,10 @@
         background: #2b333b;
         font-weight: 700;
         text-align: center;
+        &.enough{
+          background: #00b43c;
+          color: #fff;
+        }
       }
       .bar-left{
         position: relative;
@@ -294,7 +304,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    z-index: 200;
+    z-index: 100;
     background: rgba(7, 17, 27, 0.6);
   }
 </style>
