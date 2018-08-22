@@ -101,12 +101,6 @@
         return txt;
       }
     },
-    created() {
-      this.$nextTick(() => {
-        this._initScroll();
-      })
-      
-    },
     methods: {
       _initScroll() {
         this.contentScroll = new BScroll(this.$refs.listContent, {
