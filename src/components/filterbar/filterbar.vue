@@ -1,11 +1,11 @@
 <template>
   <div class="filter-wrapper">
     <div class="tabs border-1px">
-      <div class="tab" :class="[{'down': tab.type === 1}, {'active': tab.type === selectedType}]" v-for="(tab, index) in tabs" :key="index" @click="selectType(tab.type)">
-        {{tab.name}}<span class="num">{{tab.num}}</span>
+      <div class="tab" :class="getTabClass(index)" v-for="(tab, index) in tabs" :key="index" @click="filterContent(false, index)">
+        {{tab.text}}<span class="num">{{tab.num}}</span>
       </div>
     </div>
-    <div class="has-content" @click="toggleCheck">
+    <div class="has-content" @click="filterContent(true)">
       <i class="icon-check_circle" :class="{'active': contentCheck}"></i>
       <span class="txt">只看有内容的评价</span>
     </div>
@@ -13,29 +13,37 @@
 </template>
 
 <script>
+  const TABCLASS = ['all', 'up', 'down'];
   export default {
     props: {
-      food: {
-        type: Object
-      },
       tabs: {
         type: Array
       }
     },
     data() {
       return {
-        selectedType: -1,
-        contentCheck: true
+        contentCheck: true,
+        selectedIndex: 0
       }
     },
     methods: {
-      selectType(type) {      
-        this.selectedType = type;
-        this.$emit('filterContent', this.selectedType, this.contentCheck);
+      getTabClass(index) {
+        let activeStr = this.selectedIndex === index ? ' active' : '';
+        return TABCLASS[index] + activeStr;
+      },   
+      selectType(index) {      
+        this.selectedIndex = index;
+        this.$emit('filterContent', this.tabs[this.selectedIndex].type, this.contentCheck);
       },
       toggleCheck() {
         this.contentCheck = !this.contentCheck;
-        this.$emit('filterContent', this.selectedType, this.contentCheck);
+        this.$emit('filterContent', this.tabs[this.selectedIndex].type, this.contentCheck);
+      },
+      filterContent(toggle, index) {
+        if (toggle) this.contentCheck = !this.contentCheck;
+        if (typeof index !== 'undefined') this.selectedIndex = index;
+        
+        this.$emit('filterContent', this.tabs[this.selectedIndex].type, this.contentCheck);
       }
     }
   }

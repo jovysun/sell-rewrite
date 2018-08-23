@@ -58,10 +58,10 @@
     },
     computed: {
       listShow() {
-        let show = !this.fold;
         if (!this.totalCount) {
-          show = false;
+          return false;
         }
+        let show = !this.fold;
         if (show) {
           this.$nextTick(() => {
             if (!this.contentScroll) {
