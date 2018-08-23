@@ -12,7 +12,7 @@
           <div class="total-price">￥{{totalPrice}}</div>
           <div class="delivery-price">另需配送费￥{{seller.deliveryPrice}}元</div>
         </div>
-        <div class="bar-right" :class="{'enough': this.totalPrice >= this.seller.minPrice}" @click="pay">{{payTxt}}</div>
+        <div class="bar-right" :class="{'enough': this.totalPrice >= this.seller.minPrice}" @click.stop="pay">{{payTxt}}</div>
       </div>
       <div class="list" v-show="listShow">
         <div class="header border-1px">

@@ -41,7 +41,7 @@
       </div>
       <shopcart :seller="seller" :selectFoods="selectFoods"></shopcart>
     </div>
-    <food :selectedFood="selectedFood" ref="food"></food>
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
@@ -126,7 +126,7 @@
         });
       },
       _followScroll(index) {
-        this.menuScroll.scrollToElement(this.$refs.menuItem[index], 300);
+        this.menuScroll.scrollToElement(this.$refs.menuItem[index], 300, 0, -100);
       },
       selectMenu(index) {
         this.contentScroll.scrollToElement(this.$refs.contentItem[index], 300);
@@ -269,6 +269,7 @@
                   padding-left: 8px;
                   font-size: 14px;
                   color: rgb(147, 153, 159);
+                  text-decoration: line-through;
                 }
               }
               .carcontrol-wrapper{
