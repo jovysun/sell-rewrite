@@ -24,10 +24,12 @@
         </div>      
         <div class="buy" @click.stop="addCart" v-show="empty">加入购物车</div>
       </div>
+      <split v-if="food.info"></split>
       <div class="info" v-if="food.info">
         <div class="title">商品介绍</div>
         <p class="txt">{{food.info}}</p>
       </div>
+      <split v-if="food.ratings"></split>
       <div class="rating" v-if="food.ratings">
         <div class="title">商品评价</div>
         <div class="filterbar-wrapper">
@@ -57,6 +59,7 @@
   import BScroll from 'better-scroll';
   import filterbar from '@/components/filterbar/filterbar.vue';
   import cartcontrol from '@/components/cartcontrol/cartcontrol.vue';
+  import split from '@/components/split/split.vue';
   import Vue from 'vue';
 
   export default {
@@ -146,7 +149,8 @@
     },
     components: {
       filterbar,
-      cartcontrol
+      cartcontrol,
+      split
     }
 
   }
