@@ -33,7 +33,7 @@
       <div class="rating" v-if="food.ratings">
         <div class="title">商品评价</div>
         <div class="filterbar-wrapper">
-          <filterbar :food="food" :tabs="tabs" @filterContent="filterContent"></filterbar>
+          <filterbar :tabs="tabs" @filterContent="filterContent"></filterbar>
         </div>
         <ul class="rating-list">
           <li class="rating-item border-1px" v-for="(rating, index) in food.ratings" :key="index" v-show="needShow(rating.rateType, rating.text)">
@@ -100,7 +100,7 @@
           }
         });
 
-        return [{'name': '全部', 'num': totalNum, 'type': -1}, {'name': '推荐', 'num': upNum, 'type': 0}, {'name': '吐槽', 'num': downNum, 'type': 1}];    
+        return [{'text': '全部', 'num': totalNum, 'type': -1}, {'text': '推荐', 'num': upNum, 'type': 0}, {'text': '吐槽', 'num': downNum, 'type': 1}];    
       }
     },
     created() {
@@ -134,7 +134,7 @@
       },   
       filterContent(type, check) {
         this.selectedRateType = type;
-        this.hasContentCheck = check;
+        this.hasContentCheck = check;      
       },
       needShow(type, text) {
         if (this.hasContentCheck && !text) {
