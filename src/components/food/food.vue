@@ -19,7 +19,7 @@
           <span class="now">￥{{food.price}}</span>
           <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
         </div>
-        <div class="carcontrol-wrapper" v-show="[!empty]">
+        <div class="carcontrol-wrapper" v-show="!empty">
           <cartcontrol :food="food" @add="addFood"></cartcontrol>
         </div>      
         <div class="buy" @click.stop="addCart" v-show="empty">加入购物车</div>
@@ -38,7 +38,7 @@
         <ul class="rating-list">
           <li class="rating-item border-1px" v-for="(rating, index) in food.ratings" :key="index" v-show="needShow(rating.rateType, rating.text)">
             <div class="rating-header">
-              {{rating.rateTime}}
+              {{rating.rateTime | formatTime}}
               <div class="rating-user">
                 {{rating.username}}<img :src="rating.avatar" alt="" class="avatar">
               </div>
@@ -61,6 +61,7 @@
   import cartcontrol from '@/components/cartcontrol/cartcontrol.vue';
   import split from '@/components/split/split.vue';
   import Vue from 'vue';
+  import moment from 'moment';
 
   export default {
     props: {
@@ -151,6 +152,11 @@
       filterbar,
       cartcontrol,
       split
+    },
+    filters: {
+      formatTime(time) {
+        return moment(time).format('YYYY-MM-DD HH:mm');
+      }
     }
 
   }

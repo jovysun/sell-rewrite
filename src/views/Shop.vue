@@ -1,5 +1,5 @@
 <template>
-  <div class="shop">
+  <div>
     <shop-header :seller="seller"></shop-header>
     <div class="tab border-1px">
       <div class="tab-item">
@@ -48,23 +48,21 @@ export default {
 
 <style scoped lang="scss">
 @import '@/common/scss/mixin.scss';
-.shop{
-  .tab{
-    display: flex;
-    text-align: center;
-    &.border-1px{
-      @include border-1px(rgba(7, 17, 27, 0.1));
-    }
-    .tab-item{
-      flex: 1;
-      line-height: 40px;
-      a{
-        display: block;
-        font-size: 14px;
-        color: rgb(77, 85, 93);
-        &.router-link-active{
-          color: rgb(240, 20, 20);
-        }
+.tab{
+  display: flex;
+  text-align: center;
+  &.border-1px{
+    @include border-1px(rgba(7, 17, 27, 0.1));
+  }
+  .tab-item{
+    flex: 1;
+    line-height: 40px;
+    a{
+      display: block;
+      font-size: 14px;
+      color: rgb(77, 85, 93);
+      &.router-link-active{
+        color: rgb(240, 20, 20);
       }
     }
   }
