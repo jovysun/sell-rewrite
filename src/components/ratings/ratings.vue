@@ -1,5 +1,5 @@
 <template>
-  <div class="ratings">
+  <div class="ratings" ref="ratings">
     <div class="ratings-content">
       <div class="intro">
         <div class="intro-left">
@@ -10,17 +10,24 @@
         <div class="intro-right">
           <div class="item">
             <span class="title">服务态度</span>
-            <span class="star-wrapper">3颗星</span>
+            <star :size="36" :score="seller.serviceScore"></star>
             <span class="score">{{seller.serviceScore}}</span>
           </div>
+          <div class="item">
+            <span class="title">商品评价</span>
+            <star :size="36" :score="seller.foodScore"></star>
+            <span class="score">{{seller.foodScore}}</span>
+          </div>
+          <div class="item">
+            <span class="title">送达时间</span>
+            <span class="time">{{seller.deliveryTime}}分钟</span>
+          </div>                    
         </div>
       </div>
 
       <split v-if="ratings"></split>
       <div class="rating" v-if="ratings">
-        <div class="filterbar-wrapper">
-          <filterbar :food="food" :tabs="tabs" @filterContent="filterContent"></filterbar>
-        </div>
+        <filterbar :tabs="tabs" @filterContent="filterContent"></filterbar>
         <ul class="rating-list">
           <li class="rating-item border-1px" v-for="(rating, index) in ratings" :key="index" v-show="needShow(rating.rateType, rating.text)">
             <div class="rating-header">
@@ -29,9 +36,12 @@
                 {{rating.username}}<img :src="rating.avatar" alt="" class="avatar">
               </div>
             </div>
-            <div class="rating-content">
+            <div class="rating-text" v-if="rating.text">
+              {{rating.text}}
+            </div>
+            <div class="recommend">
               <i :class="[rating.rateType === 1 ? 'icon-thumb_down' : 'icon-thumb_up']"></i>
-              <span class="txt" v-if="rating.text">{{rating.text}}</span>
+              <span class="tag" v-if="rating.recommend" v-for="(recomment,index) in rating.recommend" :key="index">{{recomment}}</span>
             </div>
           </li>
         </ul>
@@ -42,9 +52,10 @@
 </template>
 
 <script>
-  // import BScroll from 'better-scroll';
+  import BScroll from 'better-scroll';
   import filterbar from '@/components/filterbar/filterbar.vue';
   import split from '@/components/split/split.vue';
+  import star from '@/components/star/star.vue';  
   import moment from 'moment';
 
   export default {
@@ -79,7 +90,7 @@
           }
         });
 
-        return [{'name': '全部', 'num': totalNum, 'type': -1}, {'name': '满意', 'num': upNum, 'type': 0}, {'name': '不满意', 'num': downNum, 'type': 1}];    
+        return [{'text': '全部', 'num': totalNum, 'type': -1}, {'text': '满意', 'num': upNum, 'type': 0}, {'text': '不满意', 'num': downNum, 'type': 1}];    
       }
     },
     created() {
@@ -88,10 +99,9 @@
         if(response.data.errno === 0){
           this.ratings = response.data.ratings;
 
-          // this.$nextTick(() => {
-          //   this._initScroll();
-          //   this._getHeightList();
-          // })
+          this.$nextTick(() => {
+            this._initScroll();
+          })
           
         }
       })
@@ -114,11 +124,17 @@
           return this.selectedRateType === type;
         }
         
+      },
+      _initScroll() {
+        this.ratingsScroll = new BScroll(this.$refs.ratings, {
+          click: true
+        });        
       }         
     },
     components: {
       filterbar,
-      split
+      split,
+      star
     },
     filters: {
       formatTime(time) {
@@ -137,13 +153,71 @@
     position: absolute;
     width: 100%;
     top: 174px;
-    bottom: 48px;
+    bottom: 0;
     overflow: hidden;
 
     .intro{
       position: relative;
-      padding: 18px;
-           
+      display: flex;
+      padding: 18px 0;
+      .intro-left{
+        flex: 0 0 137px;
+        width: 137px;
+        text-align: center;
+        .score{
+          font-size: 24px;
+          line-height: 28px;
+          color: rgb(255, 153, 0);
+        }
+        .title{
+          margin-top: 6px;
+          font-size: 12px;
+          color: rgb(7, 17, 27);
+        }
+        .rankrate{
+          margin-top: 8px;
+          padding-bottom: 6px;
+          font-size: 10px;
+          color: rgb(147, 153, 159);
+        }
+      } 
+      .intro-right{
+        flex: 1;
+        padding: 6px 6px 6px 24px;
+        border-left: 1px solid rgba(7,17,27,.1);
+        .item{
+          font-size: 0;
+          margin-top: 8px;
+          &:first-child{
+            margin-top: 0;
+          }
+          .title{
+            display: inline-block;
+            font-size: 12px;
+            line-height: 18px;
+            color: rgb(7, 17, 27);
+          }
+          .star{
+            display: inline-block;
+            margin-left: 12px;
+            vertical-align: top;
+          }
+          .score{
+            display: inline-block;
+            margin-left: 12px;
+            font-size: 12px;
+            line-height: 18px;
+            color: rgb(255, 153, 0);
+          }
+          .time{
+            display: inline-block;
+            margin-left: 12px;
+            font-size: 12px;
+            line-height: 18px;
+            color: rgb(147, 153, 159);            
+          }
+        }
+      }    
     }
 
     .rating{
@@ -152,9 +226,6 @@
         font-size: 14px;
         color: rgb(7, 17, 27);      
       }      
-      .filterbar-wrapper{
-        margin-top: 6px;
-      }
       .rating-list{
         margin: 0 -18px 0;
         border-top: 1px solid rgba(7, 17, 27, 0.1);
@@ -197,6 +268,30 @@
               color: rgb(7, 17, 27);
             }
           }
+          .recomment{
+            margin-top: 8px;
+            font-size: 0;
+            .icon-thumb_down,.icon-thumb_up{
+              font-size: 12px;
+              line-height: 16px;
+              vertical-align: top;
+            }
+            .icon-thumb_down{
+              color: rgb(147, 153, 159);             
+            }
+            .icon-thumb_up{
+              color: rgb(0, 160, 220);
+            }
+            .tag{
+              display: inline-block;
+              margin-left: 8px;
+              padding: 0 6px;
+              font-size: 9px;
+              line-height: 16px;
+            }
+          }
+
+
         }
       }
     }

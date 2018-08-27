@@ -50,34 +50,39 @@
   @import '@/common/scss/mixin.scss';
 
   .star{
-    display: inline-block;
     font-size: 0;
     .star-icon{
       display: inline-block;
       background-repeat: no-repeat;
-      &:last-child{
-        margin-right: 0;
-      }
       &.star-24{
         width: 10px;
         height: 10px;
         margin-right: 3px;
         background-size: 10px 10px;        
-        @include star-bg-image('24');    
+        @include star-bg-image('24');  
+        &:last-child{
+          margin-right: 0;
+        }  
       }
       &.star-36{
         width: 15px;
         height: 15px;
         margin-right: 6px;
         background-size: 15px 15px;
-        @include star-bg-image('36');    
+        @include star-bg-image('36');  
+        &:last-child{
+          margin-right: 0;
+        }           
       }
       &.star-48{
         width: 20px;
         height: 20px;
         margin-right: 22px;
         background-size: 20px 20px;        
-        @include star-bg-image('48');    
+        @include star-bg-image('48'); 
+        &:last-child{
+          margin-right: 0;
+        }            
       }
       
     }

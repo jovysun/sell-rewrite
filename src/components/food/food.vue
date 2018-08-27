@@ -273,7 +273,7 @@
         color: rgb(7, 17, 27);      
       }      
       .filterbar-wrapper{
-        margin-top: 6px;
+        margin-top: 18px;
       }
       .rating-list{
         margin: 0 -18px 0;

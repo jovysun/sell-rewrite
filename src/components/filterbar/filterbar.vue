@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-wrapper">
+  <div class="filterbar">
     <div class="tabs border-1px">
       <div class="tab" :class="getTabClass(index)" v-for="(tab, index) in tabs" :key="index" @click="filterContent(false, index)">
         {{tab.text}}<span class="num">{{tab.num}}</span>
@@ -51,9 +51,9 @@
 
 <style scoped lang="scss">
   @import '@/common/scss/mixin.scss';
-  .filter-wrapper{
+  .filterbar{
     .tabs{
-      padding: 12px 0 18px;
+      padding: 0 0 18px;
       font-size: 0;
       &.border-1px{
         @include border-1px(rgba(7, 17, 27, 0.1));
