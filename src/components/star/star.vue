@@ -29,15 +29,15 @@
       stars() {
         let stars = [];
         let step = this.fullScore / this.fullStar;
-        let onStarNum = this.score / step;
+        let onStarNum = Math.floor(this.score / step);
         let halfStarNum = this.score % step === 0 ? 0 : 1;
-        for (let i = 1; i < onStarNum; i++) {
+        for (let i = 0; i < onStarNum; i++) {
           stars.push('on')         
         }
         if (halfStarNum) {
           stars.push('half')
         }
-        for (let i = 1; i < this.fullStar - onStarNum - halfStarNum; i++) {
+        for (let i = 0; i < this.fullStar - onStarNum - halfStarNum; i++) {
           stars.push('off')         
         }
         return stars;

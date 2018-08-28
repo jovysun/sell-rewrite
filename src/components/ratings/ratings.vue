@@ -31,17 +31,26 @@
         <ul class="rating-list">
           <li class="rating-item border-1px" v-for="(rating, index) in ratings" :key="index" v-show="needShow(rating.rateType, rating.text)">
             <div class="rating-header">
-              {{rating.rateTime | formatTime}}
-              <div class="rating-user">
-                {{rating.username}}<img :src="rating.avatar" alt="" class="avatar">
+              <div class="avatar-holder">
+                <img :src="rating.avatar" alt="" class="avatar">
+              </div>       
+              <div class="desc">
+                <div class="name">{{rating.username}}</div>            
+                <div class="star-time">
+                  <star :size="24" :score="rating.score"></star>
+                  <span class="time">{{rating.deliveryTime}}分钟送达</span>
+                </div>
               </div>
+              <div class="rate-time">{{rating.rateTime | formatTime}}</div>
             </div>
             <div class="rating-text" v-if="rating.text">
               {{rating.text}}
             </div>
             <div class="recommend">
               <i :class="[rating.rateType === 1 ? 'icon-thumb_down' : 'icon-thumb_up']"></i>
-              <span class="tag" v-if="rating.recommend" v-for="(recomment,index) in rating.recommend" :key="index">{{recomment}}</span>
+              <div class="tags">
+                <span class="tag" v-if="rating.recommend" v-for="(recomment,index) in rating.recommend" :key="index">{{recomment}}</span>
+              </div>           
             </div>
           </li>
         </ul>
@@ -221,11 +230,7 @@
     }
 
     .rating{
-      padding: 18px 18px 0;
-      .title{
-        font-size: 14px;
-        color: rgb(7, 17, 27);      
-      }      
+      padding: 18px 18px 0;    
       .rating-list{
         margin: 0 -18px 0;
         border-top: 1px solid rgba(7, 17, 27, 0.1);
@@ -236,42 +241,64 @@
           }
           .rating-header{
             position: relative;
-            font-size: 10px;
-            color: rgb(147, 153, 159);
-            line-height: 12px;            
-            .rating-user{
-              position: absolute;
-              right: 0;
-              top: 0;
+            font-size: 0;
+            .avatar-holder{
+              display: inline-block;
+              vertical-align: top;
               .avatar{
-                margin-left: 6px;
-                width: 12px;
-                height: 12px;
+                width: 28px;
+                height: 28px;
                 border-radius: 50%;
               }
             }
-          }
-          .rating-content{
-            margin-top: 6px;
-            height: 24px;
-            line-height: 24px;
-            font-size: 12px;
-            .icon-thumb_down{
-              color: rgb(147, 153, 159);             
-            }
-            .icon-thumb_up{
-              color: rgb(0, 160, 220);
-            }
-            .txt{
+            .desc{
               display: inline-block;
-              margin-left: 4px;
-              color: rgb(7, 17, 27);
+              margin-left: 12px;
+              .name{
+                font-size: 10px;
+                line-height: 12px;
+                color: rgb(7, 17, 27);
+              }
+              .star-time{
+                margin-top: 4px;
+                font-size: 0;
+                .star{
+                  display: inline-block;
+                  vertical-align: top;
+                }
+                .time{
+                  display: inline-block;
+                  margin-left: 6px;
+                  font-size: 10px;
+                  line-height: 12px; 
+                  color: rgb(147, 153, 159);                 
+                }
+              }
             }
+            .rate-time{
+              position: absolute;
+              right: 0;
+              top: 0;
+              font-size: 10px;
+              line-height: 12px; 
+              color: rgb(147, 153, 159);                
+            }
+
           }
-          .recomment{
-            margin-top: 8px;
-            font-size: 0;
+          .rating-text{
+            margin-top: 6px;
+            padding-left: 40px;
+            line-height: 18px;
+            font-size: 12px;
+            color: rgb(7, 17, 27);
+          }
+          .recommend{
+            display: flex;
+            padding-left: 40px;
             .icon-thumb_down,.icon-thumb_up{
+              margin-top: 8px;
+              width: 12px;
+              flex: 0 0 12px;
               font-size: 12px;
               line-height: 16px;
               vertical-align: top;
@@ -282,12 +309,20 @@
             .icon-thumb_up{
               color: rgb(0, 160, 220);
             }
+            .tags{
+              flex: 1;
+              font-size: 0;
+            }
             .tag{
               display: inline-block;
               margin-left: 8px;
+              margin-top: 8px;
               padding: 0 6px;
               font-size: 9px;
               line-height: 16px;
+              color: rgb(147, 153, 159);
+              border: 1px solid rgba(7, 17, 27, 0.1);
+              background: #fff;
             }
           }
 
