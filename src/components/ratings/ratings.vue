@@ -38,7 +38,7 @@
                 <div class="name">{{rating.username}}</div>            
                 <div class="star-time">
                   <star :size="24" :score="rating.score"></star>
-                  <span class="time">{{rating.deliveryTime}}分钟送达</span>
+                  <span class="time" v-if="rating.deliveryTime">{{rating.deliveryTime}}分钟送达</span>
                 </div>
               </div>
               <div class="rate-time">{{rating.rateTime | formatTime}}</div>

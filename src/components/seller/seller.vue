@@ -9,9 +9,9 @@
             <span class="rating-count">({{seller.ratingCount}})</span>
             <span class="seller-count">月售{{seller.sellCount}}单</span>
           </div>
-          <div class="like">
-            <i class="icon-favorite"></i><br>
-            <span class="txt">已收藏</span>
+          <div class="favorite" @click="toggleFavorite">
+            <i class="icon-favorite" :class="{'active': favorite}"></i><br>
+            <span class="txt">{{favoriteTxt}}</span>
           </div>
         </div>
         <div class="intro-bottom">
@@ -64,9 +64,10 @@
 
 <script>
   import BScroll from 'better-scroll';
+  import moment from 'moment';
   import split from '@/components/split/split.vue';
   import star from '@/components/star/star.vue';  
-  import moment from 'moment';
+  import {saveToLocal, loadFromLocal} from '@/common/js/store.js';  
 
   export default {
     props: {
@@ -76,12 +77,17 @@
     },
     data() {
       return {
-        classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee']     
+        classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
+        favorite: (() => {
+          return loadFromLocal(this.seller.id, 'favorite', false);
+        })()    
       }
     },
 
     computed: {
-
+      favoriteTxt() {
+        return this.favorite ? '已收藏' : '收藏';
+      }
     },
     watch: {
       'seller'() {
@@ -99,12 +105,14 @@
     }, 
     methods: { 
       _initScroll() {
-        this.sellerScroll = new BScroll(this.$refs.seller, {
-          click: true
-        });   
-        this.picsScroll = new BScroll(this.$refs.pics, {
-          click: true
-        });      
+        if (!this.sellerScroll) {
+          this.sellerScroll = new BScroll(this.$refs.seller, {
+            click: true
+          }); 
+        } else {
+          this.sellerScroll.refresh();
+        }
+    
       },
       _initPics() {
         if (this.seller.pics) {
@@ -123,6 +131,10 @@
             }
           });
         }        
+      },
+      toggleFavorite() {
+        this.favorite = !this.favorite;
+        saveToLocal(this.seller.id, 'favorite', this.favorite);
       }         
     },
     components: {
@@ -184,18 +196,22 @@
             line-height: 18px;
           }
         }
-        .like{
+        .favorite{
           position: absolute;
           right: 0;
           bottom: 18px;
           text-align: center;
+          width: 48px;
           .icon-favorite{
             font-size: 24px;
-            color: rgb(240, 20, 20);
+            color: #d4d6d9;
+            &.active{
+              color: rgb(240, 20, 20);
+            }         
           }
           .txt{
             margin-top: 4px;
-            font-size: 10;
+            font-size: 10px;
             color: rgb(77, 85, 93);
           }
         }
